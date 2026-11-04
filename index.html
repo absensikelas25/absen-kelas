@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Absen Kelas</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{color-scheme:light;--bg:#f2f5f9;--card:#fff;--ink:#16223a;--mut:#5b6980;--line:#dbe2ec;--acc:#0f6e66;--act:#fff;--acct:#dff1ee;--H:#1b8a4b;--I:#2b6fd6;--S:#b86e00;--A:#cc3b3b;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1524;--card:#172138;--ink:#e8edf6;--mut:#9aa8c0;--line:#2a3857;--acc:#4fd1c0;--act:#07211e;--acct:#123a40;--H:#4cc17f;--I:#6ba3ff;--S:#e8a940;--A:#ff7b7b;--on:#0b1220}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1524;--card:#172138;--ink:#e8edf6;--mut:#9aa8c0;--line:#2a3857;--acc:#4fd1c0;--act:#07211e;--acct:#123a40;--H:#4cc17f;--I:#6ba3ff;--S:#e8a940;--A:#ff7b7b;--on:#0b1220}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;padding:0 14px 40px}
+.w{max-width:720px;margin:0 auto}
+h1{font-size:20px;font-weight:800;margin:14px 0 2px}
+.sub{color:var(--mut);font-size:13px;margin:0 0 10px}
+select,input,textarea,button{font:inherit;color:inherit}
+select,input[type=text],input[type=number],input[type=date],textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+textarea{min-height:200px;resize:vertical}
+label.f{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:12px 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px}
+.tabs button{border:0;background:none;padding:9px 0;border-radius:7px;font-weight:600;color:var(--mut)}
+.tabs button.on{background:var(--acc);color:var(--act)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px}
+.chip{flex:none;min-width:38px;height:38px;border:1px solid var(--line);background:var(--card);border-radius:8px;font-weight:600;position:relative}
+.chip.on{background:var(--acc);color:var(--act);border-color:var(--acc)}
+.chip.fl::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--H)}
+.sum{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.sum span{font-size:12px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid var(--line)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.who{min-width:0}.who b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who small{color:var(--mut)}
+.seg{display:flex;gap:4px;flex:none}
+.seg button{width:40px;height:40px;border:1px solid var(--line);background:var(--card);border-radius:8px;font-weight:800;color:var(--mut)}
+.seg button.on{color:var(--on);border-color:transparent}
+.seg .H.on,.b-H{background:var(--H)}.seg .I.on,.b-I{background:var(--I)}.seg .S.on,.b-S{background:var(--S)}.seg .A.on,.b-A{background:var(--A)}
+.btn{border:1px solid var(--acc);background:var(--acc);color:var(--act);padding:10px 14px;border-radius:8px;font-weight:600}
+.btn.o{background:none;color:var(--acc)}.btn.d{background:none;border-color:var(--A);color:var(--A)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.opt{display:flex;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.opt input{width:20px;height:20px;accent-color:var(--acc)}.opt.dis{opacity:.45}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{padding:6px 7px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--acct);font-weight:600}td.l,th.l{text-align:left}
+.ok{color:var(--H);font-weight:600}.no{color:var(--A);font-weight:600}
+.ttd{text-align:right;margin-top:14px;font-size:13px;color:var(--mut)}
+.empty{color:var(--mut);padding:14px 0;text-align:center}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.s{opacity:1}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style></head>
+<body><div class="w">
+<h1>Absen Kelas</h1>
+<p class="sub">Satu aplikasi untuk semua dosen yang menitipkan absen.</p>
+<select id="sel" aria-label="Pilih kelas"></select>
+<div class="tabs" id="tabs"></div>
+<div id="app"></div>
+</div>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='absen-kelas-v1',ST=['H','I','S','A'],SN={H:'Hadir',I:'Izin',S:'Sakit',A:'Alpha'};
+let S,tab='absen',cs=1,delArm=0;
+let opt={kop:1,nim:1,per:1,tgl:1,tot:1,pct:1,ket:1,ttd:1,onlyFilled:1};
+const OL=[['kop','Info kelas (mata kuliah, dosen, batas hadir)'],['nim','Kolom NIM'],['per','Rincian per pertemuan'],['tgl','Tanggal di tiap pertemuan'],['tot','Total H, I, S, A'],['pct','Persentase kehadiran'],['ket','Status memenuhi syarat'],['ttd','Tanda tangan dosen'],['onlyFilled','Hanya pertemuan yang sudah diisi']];
+const NAMA=['Andi Pratama','Bunga Maharani','Citra Dewi','Dimas Saputra','Eka Putri','Farhan Hakim','Gita Lestari','Hafiz Ramadhan'];
+function seed(){
+  const stu=()=>NAMA.map((n,i)=>({id:'s'+i+Math.random().toString(36).slice(2,5),nim:'241100'+(i+1),nama:n}));
+  const mk=(id,dosen,matkul,total,min,n)=>{const students=stu(),sessions={};
+    const D=['2026-09-07','2026-09-14','2026-09-21'];
+    for(let k=1;k<=n;k++){const att={};students.forEach((m,i)=>{const r=(i+k)%7;att[m.id]=r===0?'A':r===3?'S':r===5?'I':'H'});sessions[k]={date:D[k-1],att}}
+    return {id,dosen,matkul,total,min,students,sessions}};
+  return {cur:'k1',classes:[mk('k1','Dr. Hendra Wijaya, M.Si.','Statistika Dasar',16,75,3),mk('k2','Sari Lestari, M.Kom.','Basis Data',14,80,2)]};
+}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));return d&&d.classes&&d.classes.length?d:null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const cur=()=>S.classes.find(c=>c.id===S.cur)||S.classes[0];
+const sess=(c,n)=>c.sessions[n]||(c.sessions[n]={date:'',att:{}});
+const filled=(c,n)=>!!(c.sessions[n]&&Object.keys(c.sessions[n].att).length);
+const fd=d=>d?d.slice(8,10)+'/'+d.slice(5,7):'';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('s');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('s'),2400)}
+
+function render(){
+  const y=scrollY,ch=document.querySelector('.chips'),sl=ch?ch.scrollLeft:0,c=cur();
+  if(cs>c.total)cs=1;
+  $('#sel').innerHTML=S.classes.map(k=>`<option value="${k.id}"${k.id===c.id?' selected':''}>${esc(k.matkul)} · ${esc(k.dosen)}</option>`).join('');
+  $('#tabs').innerHTML=[['absen','Absen'],['mhs','Mahasiswa'],['lap','Laporan'],['kls','Kelas']].map(t=>`<button data-a="tab" data-v="${t[0]}" class="${tab===t[0]?'on':''}">${t[1]}</button>`).join('');
+  $('#app').innerHTML={absen:vAbsen,mhs:vMhs,lap:vLap,kls:vKls}[tab](c);
+  const n=document.querySelector('.chips');if(n)n.scrollLeft=sl;
+  scrollTo(0,y);
+}
+function vAbsen(c){
+  const s=sess(c,cs),L=c.students,cnt={H:0,I:0,S:0,A:0};
+  L.forEach(m=>{const v=s.att[m.id];if(v)cnt[v]++});
+  const un=L.length-cnt.H-cnt.I-cnt.S-cnt.A;
+  let ch='';for(let i=1;i<=c.total;i++)ch+=`<button class="chip${i===cs?' on':''}${filled(c,i)?' fl':''}" data-a="ses" data-v="${i}" aria-label="Pertemuan ${i}">${i}</button>`;
+  return `<div class="card"><label class="f" style="margin-top:0">Pertemuan ke-${cs}</label><div class="chips">${ch}</div>
+  <input type="date" id="dt" value="${esc(s.date)}" aria-label="Tanggal pertemuan">
+  <div class="sum">${ST.map(k=>`<span style="color:var(--${k})">${k} ${cnt[k]}</span>`).join('')}<span>Belum ${un}</span></div>
+  <div class="bar" style="margin:0 0 4px"><button class="btn o" data-a="all">Semua hadir</button><button class="btn o" data-a="clr">Kosongkan</button></div>
+  ${L.length?L.map(m=>`<div class="row"><div class="who"><b>${esc(m.nama)}</b><small>${esc(m.nim)}</small></div><div class="seg">${ST.map(k=>`<button class="${k}${s.att[m.id]===k?' on':''}" data-a="mark" data-s="${m.id}" data-v="${k}" aria-label="${SN[k]}" aria-pressed="${s.att[m.id]===k}">${k}</button>`).join('')}</div></div>`).join(''):'<p class="empty">Belum ada mahasiswa. Buka tab Mahasiswa dan tempel daftar nama.</p>'}</div>`;
+}
+function vMhs(c){
+  return `<div class="card"><label class="f" style="margin-top:0">Daftar mahasiswa (satu per baris)</label>
+  <textarea id="stu" placeholder="2411001 Nama Mahasiswa">${esc(c.students.map(m=>(m.nim?m.nim+' ':'')+m.nama).join('\n'))}</textarea>
+  <p class="sub">Format: NIM lalu nama. NIM boleh dikosongkan. Menghapus nama juga menghapus absennya.</p>
+  <div class="bar"><button class="btn" data-a="saveStu">Simpan daftar</button></div></div>`;
+}
+function vKls(c){
+  return `<div class="card"><label class="f" style="margin-top:0">Dosen pengampu</label><input type="text" id="f-dosen" value="${esc(c.dosen)}">
+  <label class="f">Mata kuliah</label><input type="text" id="f-matkul" value="${esc(c.matkul)}">
+  <label class="f">Jumlah pertemuan</label><input type="number" id="f-total" min="1" max="40" value="${c.total}">
+  <label class="f">Batas kehadiran minimal (%)</label><input type="number" id="f-min" min="0" max="100" value="${c.min}">
+  <div class="bar"><button class="btn" data-a="saveKls">Simpan kelas</button><button class="btn o" data-a="newKls">Tambah kelas baru</button><button class="btn d" data-a="delKls">${delArm?'Yakin hapus?':'Hapus kelas'}</button></div></div>
+  <p class="sub">Tiap dosen punya kelas sendiri dengan jumlah pertemuan dan batas hadir sendiri. Data tersimpan di browser ini.</p>
+  <div class="card"><b>Cadangan data</b><p class="sub">Unduh cadangan secara berkala supaya data aman kalau browser dibersihkan.</p><div class="bar"><button class="btn o" data-a="bak">Cadangkan data</button><button class="btn o" data-a="res">Pulihkan data</button></div><input type="file" id="rf" accept=".json,application/json" hidden></div>`;
+}
+function rep(c){
+  const done=[];for(let i=1;i<=c.total;i++)if(filled(c,i))done.push(i);
+  const ns=opt.onlyFilled?done:Array.from({length:c.total},(_,i)=>i+1);
+  const head=['No'];if(opt.nim)head.push('NIM');head.push('Nama');
+  if(opt.per)ns.forEach(i=>head.push('P'+i+(opt.tgl&&c.sessions[i]&&c.sessions[i].date?'\n'+fd(c.sessions[i].date):'')));
+  if(opt.tot)head.push('H','I','S','A');
+  if(opt.pct)head.push('%');
+  if(opt.ket)head.push('Status');
+  const body=c.students.map((m,k)=>{
+    const cnt={H:0,I:0,S:0,A:0};done.forEach(i=>{const v=c.sessions[i].att[m.id];if(v)cnt[v]++});
+    const p=done.length?Math.round(cnt.H/done.length*100):0;
+    const r=[k+1];if(opt.nim)r.push(m.nim);r.push(m.nama);
+    if(opt.per)ns.forEach(i=>r.push((c.sessions[i]&&c.sessions[i].att[m.id])||'-'));
+    if(opt.tot)r.push(cnt.H,cnt.I,cnt.S,cnt.A);
+    if(opt.pct)r.push(done.length?p+'%':'-');
+    if(opt.ket)r.push(!done.length?'-':p>=c.min?'Memenuhi':'Kurang');
+    return r;});
+  const info=[['Mata kuliah',c.matkul],['Dosen',c.dosen],['Pertemuan terisi',done.length+' dari '+c.total],['Batas kehadiran',c.min+'%']];
+  return {title:'Rekap Absensi: '+c.matkul,info,head,body,nama:opt.nim?2:1};
+}
+function vLap(c){
+  const r=rep(c);
+  return `<div class="card"><b>Isi laporan</b>${OL.map(o=>`<label class="opt${o[0]==='tgl'&&!opt.per?' dis':''}"><input type="checkbox" data-o="${o[0]}"${opt[o[0]]?' checked':''}${o[0]==='tgl'&&!opt.per?' disabled':''}>${o[1]}</label>`).join('')}
+  <div class="bar"><button class="btn" data-a="pdf">Unduh PDF</button><button class="btn o" data-a="xlsx">Unduh Excel</button></div></div>
+  <div class="card"><b>Pratinjau</b>${opt.kop?`<p class="sub" style="margin-top:6px">${r.info.map(i=>i[0]+': '+esc(i[1])).join('<br>')}</p>`:''}
+  <div class="tw"><table><thead><tr>${r.head.map((h,i)=>`<th${i===r.nama?' class="l"':''}>${esc(h).replace('\n','<br>')}</th>`).join('')}</tr></thead>
+  <tbody>${r.body.map(row=>`<tr>${row.map((v,i)=>`<td${i===r.nama?' class="l"':''}${v==='Memenuhi'?' class="ok"':v==='Kurang'?' class="no"':''}>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  ${opt.ttd?`<div class="ttd">Dosen pengampu,<br><br><br>( ${esc(c.dosen)} )</div>`:''}</div>`;
+}
+async function dl(name,data){
+  try{let d=null;try{d=window.claude&&await claude.use('downloads')}catch(x){}
+    if(d){await d.save({filename:name,data});toast('File siap disimpan');return}
+    const b=data instanceof Blob?data:new Blob([data]),u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('File diunduh')}
+  catch(e){if(!e||e.code!=='declined')toast('Gagal mengunduh, coba lagi')}
+}
+const slug=c=>(c.matkul+'-'+c.dosen.split(',')[0]).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+async function expPdf(){
+  if(!window.jspdf){toast('Library PDF belum termuat');return}
+  const c=cur(),r=rep(c),doc=new jspdf.jsPDF({orientation:r.head.length>10?'landscape':'portrait',unit:'mm',format:'a4'});
+  let y=14;doc.setFontSize(14);doc.text(r.title,14,y);doc.setFontSize(10);
+  if(opt.kop)r.info.forEach(i=>{y+=5.5;doc.text(i[0]+': '+i[1],14,y)});
+  const cs2={};cs2[r.nama]={halign:'left'};
+  doc.autoTable({head:[r.head],body:r.body,startY:y+5,styles:{fontSize:8,halign:'center',cellPadding:1.8},headStyles:{fillColor:[15,110,102]},columnStyles:cs2});
+  if(opt.ttd){const W=doc.internal.pageSize.getWidth();let fy=doc.lastAutoTable.finalY+12;
+    if(fy>doc.internal.pageSize.getHeight()-45){doc.addPage();fy=20}
+    doc.setFontSize(10);doc.text('Dosen pengampu,',W-14,fy,{align:'right'});doc.text('( '+c.dosen+' )',W-14,fy+28,{align:'right'})}
+  await dl('absensi-'+slug(c)+'.pdf',doc.output('blob'));
+}
+async function expXlsx(){
+  if(!window.XLSX){toast('Library Excel belum termuat');return}
+  const c=cur(),r=rep(c),a=[[r.title]];
+  if(opt.kop)r.info.forEach(i=>a.push(i));
+  a.push([]);a.push(r.head.map(h=>h.replace('\n',' ')));r.body.forEach(x=>a.push(x));
+  if(opt.ttd){a.push([]);a.push(['Dosen pengampu: '+c.dosen]);a.push(['Tanda tangan:'])}
+  const ws=XLSX.utils.aoa_to_sheet(a);
+  ws['!cols']=r.head.map((h,i)=>({wch:i===r.nama?26:h==='NIM'?12:h==='Status'?11:7}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Rekap');
+  await dl('absensi-'+slug(c)+'.xlsx',XLSX.write(wb,{bookType:'xlsx',type:'array'}));
+}
+function parseStu(txt,old){
+  const by={};old.forEach(m=>by[m.nama.toLowerCase()]=m);
+  return txt.split('\n').map(l=>l.trim()).filter(Boolean).map((l,i)=>{
+    let nim='',nama=l;const m=l.match(/^(\d[\w.\/-]*)[\s,;\-]+(.+)$/);if(m){nim=m[1];nama=m[2].trim()}
+    const o=by[nama.toLowerCase()];return {id:o?o.id:'s'+Date.now().toString(36)+i,nim,nama}});
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-a]');if(!t)return;
+  const a=t.dataset.a,c=cur();
+  if(a==='tab'){tab=t.dataset.v;delArm=0}
+  else if(a==='ses')cs=+t.dataset.v;
+  else if(a==='mark'){const s=sess(c,cs),id=t.dataset.s,v=t.dataset.v;if(s.att[id]===v)delete s.att[id];else s.att[id]=v;save()}
+  else if(a==='all'){const s=sess(c,cs);c.students.forEach(m=>s.att[m.id]='H');save()}
+  else if(a==='clr'){sess(c,cs).att={};save()}
+  else if(a==='saveStu'){c.students=parseStu($('#stu').value,c.students);const ids=new Set(c.students.map(m=>m.id));
+    Object.values(c.sessions).forEach(s=>{for(const k in s.att)if(!ids.has(k))delete s.att[k]});save();toast(c.students.length+' mahasiswa tersimpan')}
+  else if(a==='saveKls'){c.dosen=$('#f-dosen').value.trim()||'Dosen';c.matkul=$('#f-matkul').value.trim()||'Mata kuliah';
+    c.total=Math.min(40,Math.max(1,+$('#f-total').value||16));c.min=Math.min(100,Math.max(0,+$('#f-min').value||75));save();toast('Kelas tersimpan')}
+  else if(a==='newKls'){const id='k'+Date.now().toString(36);S.classes.push({id,dosen:'Dosen baru',matkul:'Mata kuliah baru',total:16,min:75,students:[],sessions:{}});S.cur=id;cs=1;save();toast('Kelas baru dibuat, isi datanya')}
+  else if(a==='delKls'){if(S.classes.length<2){toast('Minimal harus ada satu kelas')}
+    else if(!delArm){delArm=1;setTimeout(()=>{delArm=0;if(tab==='kls')render()},4000)}
+    else{S.classes=S.classes.filter(k=>k.id!==c.id);S.cur=S.classes[0].id;cs=1;delArm=0;save();toast('Kelas dihapus')}}
+  else if(a==='bak')return dl('cadangan-absen-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(S));
+  else if(a==='res'){$('#rf').click();return}
+  else if(a==='pdf')return expPdf();
+  else if(a==='xlsx')return expXlsx();
+  render();
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='sel'){S.cur=t.value;cs=1;delArm=0;save();render()}
+  else if(t.id==='rf'){const f=t.files[0];if(!f)return;f.text().then(x=>{const d=JSON.parse(x);if(!d.classes||!d.classes.length)throw 0;S=d;cs=1;save();render();toast('Data dipulihkan')}).catch(()=>toast('File cadangan tidak valid'));t.value=''}
+  else if(t.id==='dt'){sess(cur(),cs).date=t.value;save()}
+  else if(t.dataset.o){opt[t.dataset.o]=t.checked?1:0;render()}
+});
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+S=load()||seed();render();
+</script></body></html>
